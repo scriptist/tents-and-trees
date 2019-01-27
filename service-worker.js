@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/tents-and-trees/precache-manifest.2375732ce62e6d693c042190c2af8ba9.js"
+  "/tents-and-trees/precache-manifest.52fe0610886ee0bf80a40b29458b2acc.js"
 );
 
 workbox.clientsClaim();
