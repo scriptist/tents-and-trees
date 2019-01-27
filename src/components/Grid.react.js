@@ -1,3 +1,4 @@
+import Button from "./Button.react";
 import { Cell } from "../models/Game";
 import { useGlobalState } from "../GameGlobalState";
 import { css, cx } from "emotion";
@@ -8,7 +9,7 @@ const Grid = () => {
 
   return (
     <div className={styles.root}>
-      <button onClick={() => setGame(null)}>Stop</button>
+      <Button onClick={() => setGame(null)}>Stop</Button>
       <table className={styles.table}>
         <tbody>
           <tr>
@@ -56,6 +57,7 @@ const styles = {
   root: css``,
   table: css`
     border-collapse: collapse;
+    margin-right: 60px;
   `,
   row: css``,
   cell: css`

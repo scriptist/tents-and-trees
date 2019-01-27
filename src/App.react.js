@@ -13,7 +13,13 @@ const App = () => {
 
 const styles = {
   root: css`
+    align-items: center;
+    display: flex;
+    flex-direction: column;
     font-family: sans-serif;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
   `
 };
 
