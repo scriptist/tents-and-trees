@@ -35,7 +35,13 @@ const Grid = () => {
               </td>
               {row.map((cell, y) => (
                 <td className={styles.cell} key={y}>
-                  {cell === Cell.EMPTY ? "" : cell}
+                  <button
+                    className={styles.button}
+                    disabled={cell === Cell.TREE}
+                    onClick={() => setGame(game.cycleCell([x, y]))}
+                  >
+                    {cell === Cell.EMPTY ? "" : cell}
+                  </button>
                 </td>
               ))}
             </tr>
@@ -55,6 +61,7 @@ const styles = {
   cell: css`
     border: 1px solid;
     height: 60px;
+    padding: 0;
     text-align: center;
     width: 60px;
 
@@ -66,6 +73,14 @@ const styles = {
         font-weight: bold;
       }
     }
+  `,
+  button: css`
+    background: none;
+    border: none;
+    color: black;
+    display: block;
+    height: 60px;
+    width: 60px;
   `
 };
 

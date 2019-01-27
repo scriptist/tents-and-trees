@@ -19,10 +19,12 @@ export default class Game {
   rowCounts: null;
   colCounts: null;
 
-  constructor(size) {
+  static generate(size) {
+    const game = new Game();
+
     // Init rows and cols
-    this.size = size;
-    this.rows = Array.from({ length: size }, () =>
+    game.size = size;
+    game.rows = Array.from({ length: size }, () =>
       Array.from({ length: size }, () => Cell.EMPTY)
     );
 
@@ -31,36 +33,56 @@ export default class Game {
     while (remaining) {
       const tree = randomCell(size);
       const tent = randomAdjacentCell(tree);
-      if (!this.isEmpty(tree) || !this.isInRange(tent) || !this.isEmpty(tent)) {
+      if (!game.isEmpty(tree) || !game.isInRange(tent) || !game.isEmpty(tent)) {
         // Cells are not empty
         continue;
       }
 
-      const surroundingCells = this.getSurroundingCells(tent);
-      if (surroundingCells.some(this.isTent)) {
+      const surroundingCells = game.getSurroundingCells(tent);
+      if (surroundingCells.some(game.isTent)) {
         // Tent is adjacent to another tent
         continue;
       }
 
       // Set cells
-      this.rows[tree[0]][tree[1]] = Cell.TREE;
-      this.rows[tent[0]][tent[1]] = Cell.TENT;
+      game.rows[tree[0]][tree[1]] = Cell.TREE;
+      game.rows[tent[0]][tent[1]] = Cell.TENT;
       remaining--;
     }
 
     // Calculate counts
-    this.colCounts = Array.from({ length: size }, (_, x) =>
-      this.getColCount(x)
+    game.colCounts = Array.from({ length: size }, (_, x) =>
+      game.getColCount(x)
     );
-    this.rowCounts = Array.from({ length: size }, (_, y) =>
-      this.getRowCount(y)
+    game.rowCounts = Array.from({ length: size }, (_, y) =>
+      game.getRowCount(y)
     );
 
     // Remove tents
-    this.rows = this.rows.map(row =>
+    game.rows = game.rows.map(row =>
       row.map(cell => (cell === Cell.TENT ? Cell.EMPTY : cell))
     );
+
+    return game;
   }
+
+  constructor(rows, rowCounts, colCounts) {
+    this.rows = rows;
+    this.rowCounts = rowCounts;
+    this.colCounts = colCounts;
+  }
+
+  cycleCell = ([x, y]) => {
+    const cycle = Object.values(Cell).filter(c => c !== Cell.TREE);
+    const i = cycle.indexOf(this.rows[x][y]);
+    if (i === -1) {
+      return this;
+    }
+    const rows = this.rows.map(row => [...row]);
+    rows[x][y] = cycle[(i + 1) % cycle.length];
+
+    return new Game(rows, this.rowCounts, this.colCounts);
+  };
 
   getCol = x => {
     return this.rows.map(r => r[x]);

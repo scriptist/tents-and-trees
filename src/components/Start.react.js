@@ -19,7 +19,7 @@ const Start = () => {
         <option value="9">9</option>
         <option value="10">10</option>
       </select>
-      <button onClick={() => setGame(new Game(size))}>Start</button>
+      <button onClick={() => setGame(Game.generate(size))}>Start</button>
     </div>
   );
 };
