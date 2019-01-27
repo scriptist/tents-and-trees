@@ -131,17 +131,30 @@ export default class Game {
   isComplete = () => {
     const a = Array.from({ length: this.size }, (_, i) => i);
 
+    // Invalid rows
     if (a.some(i => !this.isRowValid(i))) {
-      // Invalid rows
       return false;
     }
 
+    // Invalid cols
     if (a.some(i => !this.isColValid(i))) {
-      // Invalid cols
       return false;
     }
 
-    // TODO: Adjacent tents
+    // Adjacent tents
+    if (
+      this.rows.some((row, x) =>
+        row.some((cell, y) =>
+          cell === Cell.TENT
+            ? this.getSurroundingCells([x, y]).some(
+                sCell => this.getCell(sCell) === Cell.TENT
+              )
+            : false
+        )
+      )
+    ) {
+      return false;
+    }
 
     // TODO: Matching trees and tents
 
