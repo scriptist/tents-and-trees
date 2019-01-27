@@ -65,10 +65,10 @@ const Square = ({ x, y }) => {
 const styles = {
   root: css`
     border: 1px solid;
-    height: 64px;
+    height: 1em;
     padding: 0;
     text-align: center;
-    width: 64px;
+    width: 1em;
 
     &.${Cell.EMPTY} {
       background: #777;
@@ -84,12 +84,16 @@ const styles = {
     color: black;
     cursor: pointer;
     display: block;
-    height: 64px;
+    font: inherit;
+    height: 1em;
     padding: 0;
-    width: 64px;
+    width: 1em;
     vertical-align: middle;
   `,
-  image: css``
+  image: css`
+    max-height: 100%;
+    max-width: 100%;
+  `
 };
 
 export default Square;
