@@ -8,7 +8,7 @@ const Grid = () => {
 
   const fontSize = useMemo(
     () => css`
-      font-size: ${100 / (game.size + 2)}vmin;
+      font-size: ${100 / (game.size + 4)}vmin;
     `,
     [game.size]
   );

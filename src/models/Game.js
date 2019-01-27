@@ -31,7 +31,8 @@ export default class Game {
 
     // Fill with tents and trees
     let remaining = Math.floor((size * size) / 5);
-    while (remaining) {
+    let tries = 0;
+    while (remaining && tries++ < 1000) {
       const tree = randomCell(size);
       const tent = randomAdjacentCell(tree);
       if (!game.isEmpty(tree) || !game.isInRange(tent) || !game.isEmpty(tent)) {
