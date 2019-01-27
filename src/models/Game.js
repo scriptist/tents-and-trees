@@ -15,6 +15,7 @@ const Side = {
 
 // Game
 export default class Game {
+  size: null;
   rows: null;
   rowCounts: null;
   colCounts: null;
@@ -66,7 +67,8 @@ export default class Game {
     return game;
   }
 
-  constructor(rows, rowCounts, colCounts) {
+  constructor(size, rows, rowCounts, colCounts) {
+    this.size = size;
     this.rows = rows;
     this.rowCounts = rowCounts;
     this.colCounts = colCounts;
@@ -78,10 +80,19 @@ export default class Game {
     if (i === -1) {
       return this;
     }
-    const rows = this.rows.map(row => [...row]);
-    rows[x][y] = cycle[(i + 1) % cycle.length];
 
-    return new Game(rows, this.rowCounts, this.colCounts);
+    return this.setCell([x, y], cycle[(i + 1) % cycle.length]);
+  };
+
+  setCell = ([x, y], value) => {
+    if (this.rows[x][y] === value) {
+      return this;
+    }
+
+    const rows = this.rows.map(row => [...row]);
+    rows[x][y] = value;
+
+    return new Game(this.size, rows, this.rowCounts, this.colCounts);
   };
 
   getCol = x => {
@@ -115,6 +126,26 @@ export default class Game {
       [x - 1, y + 1],
       [x - 1, y]
     ].filter(this.isInRange);
+  };
+
+  isComplete = () => {
+    const a = Array.from({ length: this.size }, (_, i) => i);
+
+    if (a.some(i => !this.isRowValid(i))) {
+      // Invalid rows
+      return false;
+    }
+
+    if (a.some(i => !this.isColValid(i))) {
+      // Invalid cols
+      return false;
+    }
+
+    // TODO: Adjacent tents
+
+    // TODO: Matching trees and tents
+
+    return true;
   };
 
   isColFull = x => {

@@ -2,14 +2,76 @@ import Button from "./Button.react";
 import { Cell } from "../models/Game";
 import { useGlobalState } from "../GameGlobalState";
 import { css, cx } from "emotion";
-import React from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 const Grid = () => {
+  const mouseDown = useRef(false);
+  const mouseMoveUpdate = useRef(false);
   const [game, setGame] = useGlobalState("game");
+
+  const onCellMouseDown = useCallback(
+    cell => {
+      if ([Cell.EMPTY, Cell.GRASS].includes(game.getCell(cell))) {
+        mouseDown.current = true;
+        mouseMoveUpdate.current = false;
+      }
+    },
+    [game]
+  );
+  const onCellClick = useCallback(
+    cell => {
+      if (mouseMoveUpdate.current === false) {
+        setGame(game.cycleCell(cell));
+      }
+    },
+    [game]
+  );
+
+  useEffect(
+    () => {
+      const listeners = {
+        mousemove(e) {
+          if (mouseDown.current === false) return;
+
+          const el = document.elementFromPoint(e.clientX, e.clientY);
+          if (!el) return;
+
+          const x = parseInt(el.getAttribute("data-x"), 10);
+          const y = parseInt(el.getAttribute("data-y"), 10);
+
+          if (isNaN(x) || isNaN(y)) return;
+
+          const cell = [x, y];
+          if (game.getCell(cell) === Cell.EMPTY) {
+            setGame(game.setCell(cell, Cell.GRASS));
+            mouseMoveUpdate.current = true;
+          }
+        },
+        mouseup() {
+          mouseDown.current = false;
+        }
+      };
+      Object.entries(listeners).forEach(([event, func]) =>
+        document.addEventListener(event, func)
+      );
+
+      return () => {
+        Object.entries(listeners).forEach(([event, func]) =>
+          document.removeEventListener(event, func)
+        );
+      };
+    },
+    [game]
+  );
 
   return (
     <div className={styles.root}>
-      <Button onClick={() => setGame(null)}>Stop</Button>
+      <div
+        className={cx(styles.congratulations, { visible: game.isComplete() })}
+      >
+        <h2>Congratulations!</h2>
+        <Button onClick={() => setGame(null)}>Stop</Button>
+      </div>
       <table className={styles.table}>
         <tbody>
           <tr>
@@ -38,8 +100,11 @@ const Grid = () => {
                 <td className={styles.cell} key={y}>
                   <button
                     className={styles.button}
+                    data-x={x}
+                    data-y={y}
                     disabled={cell === Cell.TREE}
-                    onClick={() => setGame(game.cycleCell([x, y]))}
+                    onClick={() => onCellClick([x, y])}
+                    onMouseDown={() => onCellMouseDown([x, y])}
                   >
                     {cell === Cell.EMPTY ? "" : cell}
                   </button>
@@ -55,6 +120,15 @@ const Grid = () => {
 
 const styles = {
   root: css``,
+  congratulations: css`
+    pointer-events: none;
+    visibility: hidden;
+
+    &.visible {
+      pointer-events: inherit;
+      visibility: visible;
+    }
+  `,
   table: css`
     border-collapse: collapse;
     margin-right: 60px;
