@@ -1,8 +1,10 @@
-import { css } from "emotion";
+import { css, cx } from "emotion";
 import { useGlobalState } from "../GameGlobalState";
 import { Cell } from "../models/Game";
 import { useDrag } from "../hooks";
 import React, { useCallback, useMemo, useRef } from "react";
+import tent from "../images/tent.png";
+import tree from "../images/tree.png";
 
 const Square = ({ x, y }) => {
   const [game, setGame] = useGlobalState("game");
@@ -40,7 +42,7 @@ const Square = ({ x, y }) => {
   );
 
   return (
-    <td className={styles.root}>
+    <td className={cx(styles.root, cell)}>
       <button
         className={styles.button}
         data-x={x}
@@ -49,7 +51,12 @@ const Square = ({ x, y }) => {
         onClick={onClick}
         ref={buttonEl}
       >
-        {cell === Cell.EMPTY ? "" : cell}
+        {cell === Cell.TENT && (
+          <img alt="tent" className={styles.image} src={tent} />
+        )}
+        {cell === Cell.TREE && (
+          <img alt="tree" className={styles.image} src={tree} />
+        )}
       </button>
     </td>
   );
@@ -58,28 +65,31 @@ const Square = ({ x, y }) => {
 const styles = {
   root: css`
     border: 1px solid;
-    height: 60px;
+    height: 64px;
     padding: 0;
     text-align: center;
-    width: 60px;
+    width: 64px;
 
-    &.count {
-      border: none;
-      font-size: 20px;
+    &.${Cell.EMPTY} {
+      background: #777;
+    }
 
-      &.valid {
-        font-weight: bold;
-      }
+    &:not(.${Cell.EMPTY}) {
+      background: #ddf29b;
     }
   `,
   button: css`
     background: none;
     border: none;
     color: black;
+    cursor: pointer;
     display: block;
-    height: 60px;
-    width: 60px;
-  `
+    height: 64px;
+    padding: 0;
+    width: 64px;
+    vertical-align: middle;
+  `,
+  image: css``
 };
 
 export default Square;

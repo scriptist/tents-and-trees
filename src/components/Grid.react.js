@@ -21,7 +21,7 @@ const Grid = () => {
             <td />
             {game.colCounts.map((colCount, y) => (
               <td
-                className={cx(styles.cell, "count", {
+                className={cx(styles.count, {
                   valid: game.isColValid(y)
                 })}
                 key={y}
@@ -31,9 +31,9 @@ const Grid = () => {
             ))}
           </tr>
           {game.rows.map((row, x) => (
-            <tr className={styles.row} key={x}>
+            <tr key={x}>
               <td
-                className={cx(styles.cell, "count", {
+                className={cx(styles.count, {
                   valid: game.isRowValid(x)
                 })}
               >
@@ -63,9 +63,18 @@ const styles = {
   `,
   table: css`
     border-collapse: collapse;
-    margin-right: 60px;
+    margin-right: 64px;
   `,
-  row: css``
+  count: css`
+    font-size: 20px;
+    height: 48px;
+    width: 48px;
+
+    &.valid {
+      font-size: 24px;
+      font-weight: bold;
+    }
+  `
 };
 
 export default Grid;
