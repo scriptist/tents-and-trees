@@ -15,7 +15,7 @@ const Square = ({ x, y }) => {
   const onClick = useCallback(
     () => {
       if (affectedByDrag.current === false) {
-        setGame(game.cycleCell([x, y]));
+        setGame(g => g.cycleCell([x, y]));
       }
     },
     [game, x, y]
@@ -28,7 +28,7 @@ const Square = ({ x, y }) => {
   const onDragOver = useCallback(
     () => {
       if (cell !== Cell.GRASS) {
-        setGame(game.setCell([x, y], Cell.GRASS));
+        setGame(g => g.setCell([x, y], Cell.GRASS));
         affectedByDrag.current = true;
       }
     },
