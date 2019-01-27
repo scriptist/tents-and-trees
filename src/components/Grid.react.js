@@ -1,21 +1,24 @@
-import Button from "./Button.react";
 import Square from "./Square.react";
 import { useGlobalState } from "../GameGlobalState";
 import { css, cx } from "emotion";
-import React from "react";
+import React, { useMemo } from "react";
 
 const Grid = () => {
-  const [game, setGame] = useGlobalState("game");
+  const [game] = useGlobalState("game");
+
+  const fontSize = useMemo(
+    () => css`
+      font-size: ${100 / (game.size + 2)}vmin;
+    `,
+    [game.size]
+  );
 
   return (
     <div className={styles.root}>
       <div
         className={cx(styles.congratulations, { visible: game.isComplete() })}
-      >
-        <h2>Congratulations!</h2>
-        <Button onClick={() => setGame(null)}>Stop</Button>
-      </div>
-      <table className={styles.table}>
+      />
+      <table className={cx(styles.table, fontSize)}>
         <tbody>
           <tr>
             <td />
@@ -63,23 +66,18 @@ const styles = {
   `,
   table: css`
     border-collapse: collapse;
-    font-size: 8vmin;
     margin-right: 1em;
   `,
   count: css`
     font-size: 0.5em;
-
-    &.col {
-      height: 48px;
-    }
-
-    &.row {
-      width: 32px;
-    }
+    height: ${1 / 0.5}em;
+    width: ${1 / 0.5}em;
 
     &.valid {
       font-size: 0.75em;
       font-weight: bold;
+      height: ${1 / 0.75}em;
+      width: ${1 / 0.75}em;
     }
   `
 };

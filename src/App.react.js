@@ -1,4 +1,5 @@
 import { useGlobalState } from "./GameGlobalState";
+import Congratulations from "./components/Congratulations.react";
 import Grid from "./components/Grid.react";
 import Start from "./components/Start.react";
 
@@ -8,7 +9,12 @@ import React from "react";
 const App = () => {
   const [game] = useGlobalState("game");
 
-  return <div className={styles.root}>{game ? <Grid /> : <Start />}</div>;
+  return (
+    <div className={styles.root}>
+      {game ? <Grid /> : <Start />}
+      {game && game.isComplete() && <Congratulations />}
+    </div>
+  );
 };
 
 const styles = {

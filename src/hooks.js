@@ -6,14 +6,12 @@ let dragging = false;
 const onMouseDown = e => {
   dragging = Array.from(dragListeners.keys()).includes(e.target);
   if (dragging) {
-    e.preventDefault();
     Array.from(dragListeners.values()).forEach(l => l.onDragStart());
   }
 };
 const onMouseMove = e => {
   if (!dragging) return;
 
-  e.preventDefault();
   const { clientX, clientY } = e instanceof MouseEvent ? e : e.touches[0];
 
   const el = document.elementFromPoint(clientX, clientY);
